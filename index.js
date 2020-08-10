@@ -25,6 +25,8 @@ async function update() {
     await updateTramp();
 
     const msPerTweet = 3 * 60 * 60 * 1000;  // 3 hrs
+    //const msPerTweet = 0;  // 3 hrs
+    
     const timeSinceLastTweet = await tweeter.getTimeSinceLastTweet()
     var shouldTweet = false
     if (timeSinceLastTweet == undefined)
@@ -46,12 +48,23 @@ async function updateTramp() {
 
 async function makeATweet() {
     console.log('tweet')
-    const { statusCode, data, headers }  = await curly.get('https://tramper.glitch.me/where')
+    const { statusCode, data, headers } = await curly.get('https://tramper.glitch.me/where')
+    if (statusCode != 200) {
+        console.log("Error getting location info: " + data)
+        return
+    }
+    
     const locationInfo = JSON.parse(data)
-    console.log( locationInfo )
-
-    var imageBuffer = await getImage('https://tramper.glitch.me/image/' + locationInfo.filename)
-    tweeter.tweetWithImage('test', imageBuffer);
+    console.log(locationInfo)
+    
+    var tweet = {
+        status: encodeURI('https://tramper.glitch.me/' + locationInfo.imageidx),
+        lat: locationInfo.point[0],
+        long: locationInfo.point[1],
+        display_coordinates: true
+    }
+    if ( !process.env.HIDE_TWEETS)
+        tweeter.tweet(tweet);
 }
 
 async function getImage(url) {
