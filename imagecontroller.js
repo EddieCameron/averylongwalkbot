@@ -43,8 +43,8 @@ exports.setImageInfo = (image) => {
 }
 
 exports.getImageAtIdx = async imageIdx => {
-    var firstIdx = ( await db.query("SELECT idx FROM images ORDER BY idx asc LIMIT 1") )[0]
-    var lastIdx = ( await db.query("SELECT idx FROM images ORDER BY idx desc LIMIT 1") )[0]
+    var firstIdx = ( await db.query("SELECT idx FROM images ORDER BY idx asc LIMIT 1") )[0].idx
+    var lastIdx = ( await db.query("SELECT idx FROM images ORDER BY idx desc LIMIT 1") )[0].idx
     if ( imageIdx < firstIdx )
         imageIdx = firstIdx
     if (imageIdx > lastIdx )
