@@ -1,6 +1,8 @@
 const tweeter = require('./tweeter')
 const tramper= require("./tramper")
 
+const webapp = require( './webapp')
+var images = require('./imagecontroller')
 
 // // auth
 // const UserAuth = require("./userauth.js");
@@ -66,13 +68,15 @@ async function makeATweet() {
     console.log("Tweeting: " + lastImage)
     
     var tweet = {
-        status: encodeURI('https://tramper.glitch.me/step/' + locationInfo.idx),
-        lat: locationInfo.point[0],
-        long: locationInfo.point[1],
+        status: encodeURI('https://tramper.glitch.me/step/' + lastImage.idx),
+        lat: lastImage.lat,
+        long: lastImage.long,
         display_coordinates: true
     }
     if ( !process.env.HIDE_TWEETS)
         tweeter.tweet(tweet);
+    else
+        console.log( tweet )
 }
 
 // CREATE TABLE images(
