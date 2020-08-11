@@ -47,7 +47,7 @@ async function update() {
             shouldTweet = true
 
         if (shouldTweet) {
-            makeATweet();
+            await makeATweet();
         }
         else {
             console.log("not long enough since last tweet")
