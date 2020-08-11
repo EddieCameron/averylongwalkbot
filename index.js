@@ -71,16 +71,22 @@ async function makeATweet() {
         return;
     
     console.log("Tweeting: " + lastImage)
+
+    // fetch image
+    const imgdownloader = bent("buffer")
+    
+    var imagebuffer = await imgdownloader(lastImage.url)
+    console.log( imagebuffer )
     
     var tweet = {
-        status: encodeURI('https://tramper.glitch.me/step/' + lastImage.idx),
+        status: `${lastImage.lat}, ${lastImage.long} - ${Math.round( image.distance /100 ) / 10}km encodeURI('https://tramper.glitch.me/step/' + lastImage.idx)`,
         lat: lastImage.lat,
         long: lastImage.long,
         display_coordinates: true
     }
     console.log( "HIDE TWEETS: " + process.env.HIDE_TWEETS)
     if ( process.env.HIDE_TWEETS != 'true')
-        tweeter.tweet(tweet);
+        await tweeter.tweet(tweet, imagebuffer);
     else
         console.log( "Fake tweet: " + tweet )
 }

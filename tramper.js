@@ -58,7 +58,9 @@ async function findNextStreetviewImage(fromDistance, incrementBy) {
       atDist = res.distance
       var time = new Date( starttime.getTime() + (atDist / walkMetresPerSecond) * 1000)
       var filename = `streetview_${atDist}_${Math.round(time.getTime() / 1000)}`
-      var url = await imgbb.uploadImg(res.image, filename )
+      var url = await imgbb.uploadImg(res.image, filename)
+      
+      exports.lastUploadedImage = res.image
       
       var newImage = { filename: filename, time: time, distance: atDist, point: res.point, url: url }
       images.setImageInfo( newImage )
