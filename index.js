@@ -78,6 +78,7 @@ async function makeATweet() {
         long: lastImage.long,
         display_coordinates: true
     }
+    console.log( "HIDE TWEETS: " + process.env.HIDE_TWEETS)
     if ( process.env.HIDE_TWEETS != 'true')
         tweeter.tweet(tweet);
     else
