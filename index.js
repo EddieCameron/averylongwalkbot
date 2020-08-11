@@ -78,10 +78,10 @@ async function makeATweet() {
         long: lastImage.long,
         display_coordinates: true
     }
-    if ( !process.env.HIDE_TWEETS)
+    if ( process.env.HIDE_TWEETS != 'true')
         tweeter.tweet(tweet);
     else
-        console.log( tweet )
+        console.log( "Fake tweet: " + tweet )
 }
 
 // CREATE TABLE images(
