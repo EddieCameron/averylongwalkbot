@@ -21,3 +21,7 @@ exports.query = async ( query, ...params) => {
 
     return result.rows
 }
+  
+exports.close = () => {
+    return pool.end()
+}

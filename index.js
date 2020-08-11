@@ -1,8 +1,8 @@
 const tweeter = require('./tweeter')
 const tramper= require("./tramper")
 
-const webapp = require( './webapp')
 var images = require('./imagecontroller')
+var db = require( './db')
 
 // // auth
 // const UserAuth = require("./userauth.js");
@@ -31,28 +31,33 @@ var images = require('./imagecontroller')
 
 // run every 10 mins
 update()
-    .catch(e => {
-        console.error(e);
-    });
 
 async function update() {
-    await updateTramp();
+    try {
+        await updateTramp();
 
-    const msPerTweet = 3 * 60 * 60 * 1000;  // 3 hrs
-    //const msPerTweet = 0;  // 3 hrs
+        const msPerTweet = 3 * 60 * 60 * 1000;  // 3 hrs
+        //const msPerTweet = 0;  // 3 hrs
     
-    const timeSinceLastTweet = await tweeter.getTimeSinceLastTweet()
-    var shouldTweet = false
-    if (timeSinceLastTweet == undefined)
-        shouldTweet = true
-    else if (timeSinceLastTweet >= msPerTweet)
-        shouldTweet = true
+        const timeSinceLastTweet = await tweeter.getTimeSinceLastTweet()
+        var shouldTweet = false
+        if (timeSinceLastTweet == undefined)
+            shouldTweet = true
+        else if (timeSinceLastTweet >= msPerTweet)
+            shouldTweet = true
 
-    if (shouldTweet) {
-        makeATweet();
+        if (shouldTweet) {
+            makeATweet();
+        }
+        else {
+            console.log("not long enough since last tweet")
+        }
     }
-    else {
-        console.log("not long enough since last tweet")
+    catch (e) {
+        console.error(e)
+    }
+    finally {
+        await db.close()
     }
 }
 async function updateTramp() {
