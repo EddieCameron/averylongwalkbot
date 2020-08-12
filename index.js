@@ -1,5 +1,6 @@
 const tweeter = require('./tweeter')
-const tramper= require("./tramper")
+const tramper = require("./tramper")
+const bent = require("bent")
 
 var images = require('./imagecontroller')
 var db = require( './db')
