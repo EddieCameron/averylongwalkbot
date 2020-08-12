@@ -37,7 +37,7 @@ async function update() {
     try {
         await updateTramp();
 
-        const msPerTweet = 3 * 60 * 60 * 1000;  // 3 hrs
+        const msPerTweet = 3 * 60 * 60 * 1000 - 5 * 60 * 1000;  // 3 hrs (minus a bit of buffer to help scheduling)
         //const msPerTweet = 0;  // 3 hrs
     
         const timeSinceLastTweet = await tweeter.getTimeSinceLastTweet()
