@@ -50,7 +50,8 @@ async function findNextStreetviewImage(fromDistance, incrementBy) {
       const x = Math.cos(radLat1)*Math.sin(radLat2) -
                 Math.sin(radLat1)*Math.cos(radLat2)*Math.cos(radLong2-radLong1);
       const θ = Math.atan2(y, x);
-      const brng = (θ * 180 / Math.PI + 360) % 360; // in degrees
+      
+      var brng = (θ * 180 / Math.PI + 360) % 360; // in degrees
       console.log( `Getting street view at ${point[0]}, ${point[1]} looking ${brng}` )
       brng += ( Math.random() * 90 - 45 ) // random turn up to 45deg
 
