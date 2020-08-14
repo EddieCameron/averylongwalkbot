@@ -4,6 +4,9 @@ const imgbb = new Imgbb({
 });
 
 exports.uploadImg = async (imgBuffer, filename) => {
+    if (process.env.SKIP_UPLOAD == 'true')
+        return filename + ".com"
+
     const imageRes = await imgbb.upload(imgBuffer.toString('base64'), filename)
     console.log( "Uploaded image to " + imageRes.data.url )
     return imageRes.data.url

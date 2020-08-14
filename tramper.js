@@ -26,7 +26,7 @@ exports.updateTramp = async () => {
 }
 
 async function findNextStreetviewImage(fromDistance, incrementBy) {
-    console.log( "Finding streetview image at " + fromDistance)
+  console.log( "Finding streetview image at " + fromDistance)
   var route = await images.getRoute()
   var point = maps.getPointOnLeg(route.routes[0].legs[0], fromDistance)
   console.log( point )
@@ -39,6 +39,21 @@ async function findNextStreetviewImage(fromDistance, incrementBy) {
       return findNextStreetviewImage( fromDistance + incrementBy, incrementBy)
     }
     else {
+      var lookAheadPoint = maps.getPointOnLeg(route.routes[0].legs[0], fromDistance + 10)
+
+      // calc bearing to look forward
+      var radLat1 = point[0] * Math.PI / 180
+      var radLong1 = point[1] * Math.PI / 180
+      var radLat2 = lookAheadPoint[0] * Math.PI / 180
+      var radLong2 = lookAheadPoint[1] * Math.PI / 180
+      const y = Math.sin(radLong2-radLong1) * Math.cos(radLat2);
+      const x = Math.cos(radLat1)*Math.sin(radLat2) -
+                Math.sin(radLat1)*Math.cos(radLat2)*Math.cos(radLong2-radLong1);
+      const θ = Math.atan2(y, x);
+      const brng = (θ * 180 / Math.PI + 360) % 360; // in degrees
+      console.log( `Getting street view at ${point[0]}, ${point[1]} looking ${brng}` )
+      brng += ( Math.random() * 90 - 45 ) // random turn up to 45deg
+
       return {
         distance: fromDistance, 
         point: point,
@@ -46,7 +61,7 @@ async function findNextStreetviewImage(fromDistance, incrementBy) {
           lat: point[0],
           lng: point[1],
           size: [1024, 1024],
-          heading: Math.random() * 360
+          heading: brng
         } )
       }
     }
