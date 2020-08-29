@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node -r dotenv/config index.js"
+    "start": "node -r dotenv/config index.js",
+    "tweet": "node -r dotenv/config forcetweet.js"
   },
   "author": "eddie cameron",
   "license": "ISC",

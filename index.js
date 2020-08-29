@@ -65,7 +65,7 @@ async function updateTramp() {
     await tramper.updateTramp();
 }
 
-async function makeATweet() {
+exports.makeATweet = async function() {
     console.log('tweet')
     var lastImage = await images.getLastImageInfo()
     if (lastImage === undefined)
