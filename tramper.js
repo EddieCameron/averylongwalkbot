@@ -91,7 +91,7 @@ async function findNextStreetviewImage(fromDistance, incrementBy) {
       console.log( `Getting street view at ${point[0]}, ${point[1]} looking ${brng}` )
       brng += ( Math.random() * 180 - 90 ) // random turn up to 90deg
 
-      const path = maps.getPathsOverDistance( route.routes[0].legs[0], fromDistance - 30000, fromDistance + 30000, 600 )
+      const path = maps.getPathsOverDistance( route.routes[0].legs[0], fromDistance - 20000, fromDistance + 20000, 750 )
       
       return {
         distance: fromDistance, 
