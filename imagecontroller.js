@@ -38,8 +38,8 @@ exports.getLastImageInfo = async () => {
 }
 
 exports.setImageInfo = (image) => {
-    return db.query("INSERT INTO images(filename, time, distance, lat, long, url) VALUES($1, $2, $3, $4, $5, $6)",
-        image.filename, image.time, image.distance, image.point[0], image.point[1], image.url);
+    return db.query("INSERT INTO images(filename, time, distance, lat, long, url, mapurl) VALUES($1, $2, $3, $4, $5, $6, $7)",
+        image.filename, image.time, image.distance, image.point[0], image.point[1], image.url, image.mapurl);
 }
 
 exports.getImageAtIdx = async imageIdx => {

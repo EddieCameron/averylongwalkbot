@@ -37,15 +37,21 @@ exports.getTimeSinceLastTweet = async () => {
     }
 }
 
-exports.tweet = async (status, imageBuffer) => {
-    if (imageBuffer) {
-        // Make post request on media endpoint. Pass file data as media parameter
-        const media = await client.post('media/upload', { media: imageBuffer });
-        // If successful, a media object will be returned.
-        console.log(media);
+exports.tweet = async (status, ...imageBuffers) => {
+    if (imageBuffers.length < 0) {
+        const medialist = []
+        for (const image of imageBuffers) {
+            if (image) {
+                // Make post request on media endpoint. Pass file data as media parameter
+                const media = await client.post('media/upload', { media: image });
+                // If successful, a media object will be returned.
+                console.log(media);
+                medialist.push(media.media_id_string);
+            }
+        }
 
         // Lets tweet it
-        status.media_ids = media.media_id_string;
+        status.media_ids = medialist.join(',');
     }
     
     const tweet = await client.post('statuses/update', status);
