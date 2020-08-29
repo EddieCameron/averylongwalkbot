@@ -178,11 +178,6 @@ exports.getMapAtPoint = async function (lat, long, path) {
     markers: `color:orange|size:tiny|${lat},${long}`,
     path:`color:orange|enc:${path}`
   }
-  try {
-    const map = await staticMapsRequest(qs.stringify(mapParams))
-    await fs.writeFileSync( "test.png", map )
-  }
-  catch (e) {
-    console.error(e)
-  }
+  
+  return staticMapsRequest(qs.stringify(mapParams))
 }
