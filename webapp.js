@@ -15,7 +15,7 @@ app.get('/latest', async (req, res) => {
 })
   
 app.get('/image/:imageidx', async (req, res) => {
-    if (imageidx === undefined )
+    if (req.params.imageidx === undefined )
         throw new Error('Need to provide an image idx')
     
     var lastImage = await images.getImageAtIdx( req.params.imageidx )
