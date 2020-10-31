@@ -9,6 +9,7 @@ const poolConfig = {
 if (process.env.DATABASE_SSL != undefined)
     poolConfig.ssl = JSON.parse(process.env.DATABASE_SSL);
 
+console.log(process.env.DATABASE_URL);
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL
 })

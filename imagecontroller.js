@@ -54,6 +54,10 @@ exports.getImageAtIdx = async imageIdx => {
     return images[0]
 }
 
+exports.getAllImages = async () => {
+    return db.query( "SELECT url FROM images ORDER BY idx ASC" )
+}
+
 // exports.resetpath = () => {
 //     db.set( 'images', [] )
 //         .write()

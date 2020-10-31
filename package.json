@@ -12,7 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@googlemaps/google-maps-services-js": "^3.1.6",
-    "bent": "^7.3.9",
+    "bent": "^7.3.11",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "imgbbjs": "^1.0.4",
