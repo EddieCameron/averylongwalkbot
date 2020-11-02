@@ -4,8 +4,8 @@ const imgbb = require('./imgbb')
 const streetview= require('streetview');
 
 const sv = new streetview({ api_key: process.env.GOOGLE_API_KEY })
-const walkIncrementMetres= 10 * 60 * 1.4
-const walkMetresPerSecond = 1.4
+const walkMetresPerSecond = 1
+const walkIncrementMetres= 10 * 60 * walkMetresPerSecond
 
 exports.updateTramp = async () => {
   var starttime = await images.getStartTime()
