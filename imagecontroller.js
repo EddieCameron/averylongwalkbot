@@ -1,11 +1,12 @@
 const db = require('./db')
+const routename = process.env.CURRENT_ROUTENAME;
 
 exports.setRoute = ( route ) => {
-    return db.query("INSERT INTO routes(routejson) VALUES($1)", JSON.stringify(route))
+    return db.query("INSERT INTO routes(routejson, routename) VALUES($1, $2)", JSON.stringify(route), routename)
 }
 
 exports.getRoute = async () => {
-    var allRoutes = await db.query("SELECT routejson FROM routes")
+    var allRoutes = await db.query("SELECT routejson FROM routes WHERE routename=$1", routename)
     try {
         console.log("parsing")
         var route = JSON.parse(allRoutes[0].routejson)
@@ -18,19 +19,19 @@ exports.getRoute = async () => {
 }
 
 exports.getStartTime = async () => {
-    var starttime = await db.query("SELECT starttime FROM routes")
+    var starttime = await db.query("SELECT starttime FROM routes WHERE routename=$1", routename)
     console.log( starttime)
     if (starttime.length == 0 || starttime[0].starttime == null) {
         var now = new Date()
         console.log( now)
-        await db.query("UPDATE routes SET starttime=$1", now)
+        await db.query("UPDATE routes SET starttime=$1 WHERE routename=$2", now, routename)
         return now
     }
     return starttime[0].starttime
 }
 
 exports.getLastImageInfo = async () => {
-    var images = await db.query("SELECT * FROM images ORDER BY idx desc LIMIT 1")
+    var images = await db.query("SELECT * FROM images WHERE routename=$1 ORDER BY idx desc LIMIT 1", routename)
     if (images.length == 0)
         return undefined;
     else
@@ -38,24 +39,24 @@ exports.getLastImageInfo = async () => {
 }
 
 exports.setImageInfo = (image) => {
-    return db.query("INSERT INTO images(filename, time, distance, lat, long, url, mapurl) VALUES($1, $2, $3, $4, $5, $6, $7)",
-        image.filename, image.time, image.distance, image.point[0], image.point[1], image.url, image.mapurl);
+    return db.query("INSERT INTO images(filename, time, distance, lat, long, url, mapurl, routename) VALUES($1, $2, $3, $4, $5, $6, $7, $8)",
+        image.filename, image.time, image.distance, image.point[0], image.point[1], image.url, image.mapurl, routename);
 }
 
 exports.getImageAtIdx = async imageIdx => {
-    var firstIdx = ( await db.query("SELECT idx FROM images ORDER BY idx asc LIMIT 1") )[0].idx
-    var lastIdx = ( await db.query("SELECT idx FROM images ORDER BY idx desc LIMIT 1") )[0].idx
+    var firstIdx = ( await db.query("SELECT idx FROM images WHERE routename=$1 ORDER BY idx asc LIMIT 1", routename) )[0].idx
+    var lastIdx = ( await db.query("SELECT idx FROM images WHERE routename=$1 ORDER BY idx desc LIMIT 1", routename ) )[0].idx
     if ( imageIdx < firstIdx )
         imageIdx = firstIdx
     if (imageIdx > lastIdx )
         imageIdx = lastIdx
     
-    var images = await db.query("SELECT * FROM images WHERE idx=$1", imageIdx)
+    var images = await db.query("SELECT * FROM images WHERE idx=$1, routename=$2", imageIdx, routename)
     return images[0]
 }
 
 exports.getAllImages = async () => {
-    return db.query( "SELECT url FROM images ORDER BY idx ASC" )
+    return db.query( "SELECT url FROM images WHERE routename=$1 ORDER BY idx ASC", routename )
 }
 
 // exports.resetpath = () => {

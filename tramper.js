@@ -121,7 +121,7 @@ async function findNextStreetviewImage(fromDistance, incrementBy) {
       exports.lastUploadedImage = res.image
       
       var newImage = { filename: filename, time: time, distance: atDist, point: res.point, url: url, mapurl: mapurl }
-      //images.setImageInfo( newImage )
+      images.setImageInfo( newImage )
       return newImage
     }
     catch ( e ) {
