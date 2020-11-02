@@ -14,11 +14,25 @@ app.get('/latest', async (req, res) => {
     res.json( lastImage )
 })
   
+app.get('/:routename/latest', async (req, res) => {
+    var lastImage = await images.getLastImageInfo( req.params.routename )
+    res.json( lastImage )
+})
+
+  
 app.get('/image/:imageidx', async (req, res) => {
     if (req.params.imageidx === undefined )
         throw new Error('Need to provide an image idx')
     
     var lastImage = await images.getImageAtIdx( req.params.imageidx )
+    res.json( lastImage )
+})
+  
+app.get('/:routename/image/:imageidx', async (req, res) => {
+    if (req.params.imageidx === undefined )
+        throw new Error('Need to provide an image idx')
+    
+    var lastImage = await images.getImageAtIdx( req.params.imageidx, req.params.routename )
     res.json( lastImage )
 })
 

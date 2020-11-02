@@ -1,11 +1,12 @@
 const db = require('./db')
-const routename = process.env.CURRENT_ROUTENAME;
 
 exports.setRoute = ( route ) => {
+    const routename = process.env.CURRENT_ROUTENAME;
     return db.query("INSERT INTO routes(routejson, routename) VALUES($1, $2)", JSON.stringify(route), routename)
 }
 
 exports.getRoute = async () => {
+    const routename = process.env.CURRENT_ROUTENAME;
     var allRoutes = await db.query("SELECT routejson FROM routes WHERE routename=$1", routename)
     try {
         console.log("parsing")
@@ -19,6 +20,8 @@ exports.getRoute = async () => {
 }
 
 exports.getStartTime = async () => {
+    const routename = process.env.CURRENT_ROUTENAME;
+
     var starttime = await db.query("SELECT starttime FROM routes WHERE routename=$1", routename)
     console.log( starttime)
     if (starttime.length == 0 || starttime[0].starttime == null) {
@@ -30,7 +33,10 @@ exports.getStartTime = async () => {
     return starttime[0].starttime
 }
 
-exports.getLastImageInfo = async () => {
+exports.getLastImageInfo = async (routename) => {
+    if (routename === undefined)
+        routename = process.env.CURRENT_ROUTENAME;
+    
     var images = await db.query("SELECT * FROM images WHERE routename=$1 ORDER BY idx desc LIMIT 1", routename)
     if (images.length == 0)
         return undefined;
@@ -39,11 +45,16 @@ exports.getLastImageInfo = async () => {
 }
 
 exports.setImageInfo = (image) => {
+    const routename = process.env.CURRENT_ROUTENAME;
+
     return db.query("INSERT INTO images(filename, time, distance, lat, long, url, mapurl, routename) VALUES($1, $2, $3, $4, $5, $6, $7, $8)",
         image.filename, image.time, image.distance, image.point[0], image.point[1], image.url, image.mapurl, routename);
 }
 
-exports.getImageAtIdx = async imageIdx => {
+exports.getImageAtIdx = async (imageIdx, routename) => {
+    if (routename === undefined)
+        routename = process.env.CURRENT_ROUTENAME;
+    
     var firstIdx = ( await db.query("SELECT idx FROM images WHERE routename=$1 ORDER BY idx asc LIMIT 1", routename) )[0].idx
     var lastIdx = ( await db.query("SELECT idx FROM images WHERE routename=$1 ORDER BY idx desc LIMIT 1", routename ) )[0].idx
     if ( imageIdx < firstIdx )
@@ -51,11 +62,12 @@ exports.getImageAtIdx = async imageIdx => {
     if (imageIdx > lastIdx )
         imageIdx = lastIdx
     
-    var images = await db.query("SELECT * FROM images WHERE idx=$1, routename=$2", imageIdx, routename)
+    var images = await db.query("SELECT * FROM images WHERE idx=$1 AND routename=$2", imageIdx, routename)
     return images[0]
 }
 
 exports.getAllImages = async () => {
+    const routename = process.env.CURRENT_ROUTENAME;
     return db.query( "SELECT url FROM images WHERE routename=$1 ORDER BY idx ASC", routename )
 }
 
