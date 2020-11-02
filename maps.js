@@ -4,26 +4,7 @@ const fs = require('fs');
 
 const client = new Client({})
 
-const bent = require( 'bent' )
-
-// const db = require('./db.js')
-// exports.getDirs = async () => {
-//     try {
-//         const res = await client.directions( { params: {
-//             origin: {lat: 70.2428161,lng: -148.3923203 },
-//             destination: { lat: 13.8108272, lng: -90.2635695 },
-//             key: process.env.GOOGLE_API_KEY
-//             // avoid: "highways",
-//             // units: "metric",
-//         } })
-//         console.log( 'status: ' + res.status )
-
-//         db.setRoute( res.data )
-//     }
-//     catch ( e ) {
-//         console.error(e);
-//     }
-// };
+const bent = require('bent');
 
 function distance(lat1, lon1, lat2, lon2) {
     var p = 0.017453292519943295;    // Math.PI / 180
