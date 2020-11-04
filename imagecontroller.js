@@ -79,10 +79,10 @@ exports.getImageAtStep = async (stepnumber, routename) => {
     
     var firstIdx = ( await db.query("SELECT stepnumber FROM images WHERE routename=$1 ORDER BY stepnumber asc LIMIT 1", routename) )[0].idx
     var lastIdx = ( await db.query("SELECT stepnumber FROM images WHERE routename=$1 ORDER BY stepnumber desc LIMIT 1", routename ) )[0].idx
-    if ( imageIdx < firstIdx )
-        imageIdx = firstIdx
-    if (imageIdx > lastIdx )
-        imageIdx = lastIdx
+    if ( stepnumber < firstIdx )
+        stepnumber = firstIdx
+    if (stepnumber > lastIdx )
+        stepnumber = lastIdx
     
     var images = await db.query("SELECT * FROM images WHERE stepnumber=$1 AND routename=$2", stepnumber, routename)
     return images[0]
