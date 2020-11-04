@@ -63,21 +63,6 @@ exports.setImageInfo = (image) => {
         image.filename, image.time, image.distance, image.point[0], image.point[1], image.url, image.mapurl, routename, image.stepnumber);
 }
 
-exports.getImageAtIdx = async (imageIdx, routename) => {
-    if (routename === undefined)
-        routename = process.env.CURRENT_ROUTENAME;
-    
-    var firstIdx = ( await db.query("SELECT idx FROM images WHERE routename=$1 ORDER BY idx asc LIMIT 1", routename) )[0].idx
-    var lastIdx = ( await db.query("SELECT idx FROM images WHERE routename=$1 ORDER BY idx desc LIMIT 1", routename ) )[0].idx
-    if ( imageIdx < firstIdx )
-        imageIdx = firstIdx
-    if (imageIdx > lastIdx )
-        imageIdx = lastIdx
-    
-    var images = await db.query("SELECT * FROM images WHERE idx=$1 AND routename=$2", imageIdx, routename)
-    return images[0]
-}
-
 exports.getAllImages = async () => {
     const routename = process.env.CURRENT_ROUTENAME;
     return db.query( "SELECT url FROM images WHERE routename=$1 ORDER BY idx ASC", routename )
@@ -87,3 +72,18 @@ exports.getAllImages = async () => {
 //     db.set( 'images', [] )
 //         .write()
 // }
+
+exports.getImageAtStep = async (stepnumber, routename) => {
+    if (routename === undefined)
+        routename = process.env.CURRENT_ROUTENAME;
+    
+    var firstIdx = ( await db.query("SELECT stepnumber FROM images WHERE routename=$1 ORDER BY stepnumber asc LIMIT 1", routename) )[0].idx
+    var lastIdx = ( await db.query("SELECT stepnumber FROM images WHERE routename=$1 ORDER BY stepnumber desc LIMIT 1", routename ) )[0].idx
+    if ( imageIdx < firstIdx )
+        imageIdx = firstIdx
+    if (imageIdx > lastIdx )
+        imageIdx = lastIdx
+    
+    var images = await db.query("SELECT * FROM images WHERE stepnumber=$1 AND routename=$2", stepnumber, routename)
+    return images[0]
+}

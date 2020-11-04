@@ -20,19 +20,19 @@ app.get('/:routename/latest', async (req, res) => {
 })
 
   
-app.get('/image/:imageidx', async (req, res) => {
-    if (req.params.imageidx === undefined )
-        throw new Error('Need to provide an image idx')
+app.get('/image/:stepnumber', async (req, res) => {
+    if (req.params.stepnumber === undefined )
+        throw new Error('Need to provide a step number')
     
-    var lastImage = await images.getImageAtIdx( req.params.imageidx )
+    var lastImage = await images.getImageAtStep( req.params.stepnumber )
     res.json( lastImage )
 })
   
-app.get('/:routename/image/:imageidx', async (req, res) => {
-    if (req.params.imageidx === undefined )
-        throw new Error('Need to provide an image idx')
+app.get('/:routename/image/:stepnumber', async (req, res) => {
+    if (req.params.stepnumber === undefined )
+        throw new Error('Need to provide a step number')
     
-    var lastImage = await images.getImageAtIdx( req.params.imageidx, req.params.routename )
+    var lastImage = await images.getImageAtStep( req.params.stepnumber, req.params.routename )
     res.json( lastImage )
 })
 
