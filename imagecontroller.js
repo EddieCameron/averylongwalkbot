@@ -77,8 +77,8 @@ exports.getImageAtStep = async (stepnumber, routename) => {
     if (routename === undefined)
         routename = process.env.CURRENT_ROUTENAME;
     
-    var firstIdx = ( await db.query("SELECT stepnumber FROM images WHERE routename=$1 ORDER BY stepnumber asc LIMIT 1", routename) )[0].idx
-    var lastIdx = ( await db.query("SELECT stepnumber FROM images WHERE routename=$1 ORDER BY stepnumber desc LIMIT 1", routename ) )[0].idx
+    var firstIdx = ( await db.query("SELECT stepnumber FROM images WHERE routename=$1 ORDER BY stepnumber asc LIMIT 1", routename) )[0].stepnumber
+    var lastIdx = ( await db.query("SELECT stepnumber FROM images WHERE routename=$1 ORDER BY stepnumber desc LIMIT 1", routename ) )[0].stepnumber
     if ( stepnumber < firstIdx )
         stepnumber = firstIdx
     if (stepnumber > lastIdx )
