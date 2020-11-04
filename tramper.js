@@ -11,17 +11,20 @@ exports.updateTramp = async () => {
   var starttime = await images.getStartTime()
   var walkToDistance = (Date.now() - starttime.getTime()) / 1000 * walkMetresPerSecond
 
+  var stepNumber = 1
   var walkedDistance = 0
   var lastImage = await images.getLastImageInfo()
   if (lastImage !== undefined) {
     walkedDistance = lastImage.distance + walkIncrementMetres
+    stepNumber = lastImage.stepnumber + 1
   }
 
   console.log("Walked: " + walkedDistance + " Walk to: " + walkToDistance)
   while (walkedDistance <= walkToDistance) {
     console.log("Getting street view at " + walkedDistance)
-    const imageAtDist = await saveNextStreetViewImage(walkedDistance, starttime)
+    const imageAtDist = await saveNextStreetViewImage(walkedDistance, starttime, stepNumber)
     walkedDistance = imageAtDist.distance + walkIncrementMetres
+    stepNumber++
   }
 }
 
@@ -107,7 +110,7 @@ async function findNextStreetviewImage(fromDistance, incrementBy) {
     }
   }
   
-  async function saveNextStreetViewImage(atDist, starttime) {
+  async function saveNextStreetViewImage(atDist, starttime, stepNumber) {
     try {
       const res = await findNextStreetviewImage(atDist, 50)
       atDist = res.distance
@@ -120,7 +123,7 @@ async function findNextStreetviewImage(fromDistance, incrementBy) {
       
       exports.lastUploadedImage = res.image
       
-      var newImage = { filename: filename, time: time, distance: atDist, point: res.point, url: url, mapurl: mapurl }
+      var newImage = { filename: filename, time: time, distance: atDist, point: res.point, url: url, mapurl: mapurl, stepnumber: stepNumber }
       images.setImageInfo( newImage )
       return newImage
     }

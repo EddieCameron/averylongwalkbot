@@ -1,8 +1,20 @@
 const db = require('./db')
 
-exports.setRoute = ( route ) => {
+exports.setRoute = async (route) => {
     const routename = process.env.CURRENT_ROUTENAME;
-    return db.query("INSERT INTO routes(routejson, routename) VALUES($1, $2)", JSON.stringify(route), routename)
+
+    try {
+        var starttime = await db.query("SELECT starttime FROM routes WHERE routename=$1", routename)
+        if (starttime.length == 0 || starttime[0].starttime == null) {
+            await db.query("INSERT INTO routes(routejson, routename) VALUES($1, $2)", JSON.stringify(route), routename)
+        }
+        else {
+            await db.query("UPDATE routes SET routejson=$1 WHERE routename=$2", JSON.stringify(route), routename)
+        }
+    }
+    catch (e) {
+        console.error(e);
+    }
 }
 
 exports.getRoute = async () => {
@@ -47,8 +59,8 @@ exports.getLastImageInfo = async (routename) => {
 exports.setImageInfo = (image) => {
     const routename = process.env.CURRENT_ROUTENAME;
 
-    return db.query("INSERT INTO images(filename, time, distance, lat, long, url, mapurl, routename) VALUES($1, $2, $3, $4, $5, $6, $7, $8)",
-        image.filename, image.time, image.distance, image.point[0], image.point[1], image.url, image.mapurl, routename);
+    return db.query("INSERT INTO images(filename, time, distance, lat, long, url, mapurl, routename,stepnumber) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)",
+        image.filename, image.time, image.distance, image.point[0], image.point[1], image.url, image.mapurl, routename, image.stepnumber);
 }
 
 exports.getImageAtIdx = async (imageIdx, routename) => {

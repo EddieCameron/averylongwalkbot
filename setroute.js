@@ -9,7 +9,7 @@ exports.getDirs = async () => {
             destination: { lat: 45.522284, lng: 141.936580 },
             waypoints: [ {lat: 35.679824, lng: 139.768652 } ],
             key: process.env.GOOGLE_API_KEY,
-            avoid: "highways",
+            avoid: "highways|ferries",
             // units: "metric",
         } })
         console.log( 'status: ' + res.status )
