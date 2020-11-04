@@ -84,7 +84,7 @@ async function makeATweet() {
     }
     
     var tweet = {
-        status: `${lastImage.lat}, ${lastImage.long} - ${Math.round( lastImage.distance /100 ) / 10}km ${encodeURI('https://tramper.glitch.me/step/' + lastImage.stepnumber)}`,
+        status: `${lastImage.stepnumber}: ${lastImage.lat}, ${lastImage.long} - ${Math.round( lastImage.distance /100 ) / 10}km ${encodeURI('https://tramper.glitch.me/step/' + lastImage.stepnumber)}`,
         lat: lastImage.lat,
         long: lastImage.long,
         display_coordinates: true
