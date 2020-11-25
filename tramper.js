@@ -70,8 +70,9 @@ async function findNextStreetviewImage(fromDistance, incrementBy) {
 
   var leg
   var distanceOnLeg = fromDistance
-  for (leg = 0; index < route.routes[0].length; leg++) {
+  for (leg = 0; leg < route.routes[0].legs.length; leg++) {
     var legLength = route.routes[0].legs[leg].distance.value
+    console.log( "Leg " + leg + " : length: " + legLength)
     if (legLength > distanceOnLeg) {
       break;
     }
@@ -90,7 +91,7 @@ async function findNextStreetviewImage(fromDistance, incrementBy) {
     return findNextStreetviewImage( fromDistance + incrementBy, incrementBy)
   }
   else {
-    var lookAheadPoint = maps.getPointOnLeg(route.routes[0].legs[leg], fromDistance + 10)
+    var lookAheadPoint = maps.getPointOnLeg(route.routes[0].legs[leg], distanceOnLeg + 10)
 
     // calc bearing to look forward
     var radLat1 = point[0] * Math.PI / 180
