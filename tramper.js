@@ -67,48 +67,60 @@ exports.updateTramp = async () => {
 async function findNextStreetviewImage(fromDistance, incrementBy) {
   console.log( "Finding streetview image at " + fromDistance)
   var route = await images.getRoute()
-  var point = maps.getPointOnLeg(route.routes[0].legs[0], fromDistance)
-  console.log( point )
-    var metadata = await sv.metadata( {
-      lat: point[0],
-      lng: point[1]
-    } )
-    if ( metadata.status != 'OK' ) {
-      console.log( "No street view at " + fromDistance + ", going further" )
-      return findNextStreetviewImage( fromDistance + incrementBy, incrementBy)
+
+  var leg
+  var distanceOnLeg = fromDistance
+  for (leg = 0; index < route.routes[0].length; leg++) {
+    var legLength = route.routes[0].legs[leg].distance.value
+    if (legLength > distanceOnLeg) {
+      break;
     }
-    else {
-      var lookAheadPoint = maps.getPointOnLeg(route.routes[0].legs[0], fromDistance + 10)
+    distanceOnLeg -= legLength;
+  }
 
-      // calc bearing to look forward
-      var radLat1 = point[0] * Math.PI / 180
-      var radLong1 = point[1] * Math.PI / 180
-      var radLat2 = lookAheadPoint[0] * Math.PI / 180
-      var radLong2 = lookAheadPoint[1] * Math.PI / 180
-      const y = Math.sin(radLong2-radLong1) * Math.cos(radLat2);
-      const x = Math.cos(radLat1)*Math.sin(radLat2) -
-                Math.sin(radLat1)*Math.cos(radLat2)*Math.cos(radLong2-radLong1);
-      const θ = Math.atan2(y, x);
+  var point = maps.getPointOnLeg(route.routes[0].legs[leg], distanceOnLeg)
+  console.log(`Point at ${distanceOnLeg} on leg ${leg}: ${point}`)
+  
+  var metadata = await sv.metadata( {
+    lat: point[0],
+    lng: point[1]
+  } )
+  if ( metadata.status != 'OK' ) {
+    console.log( "No street view at " + fromDistance + ", going further" )
+    return findNextStreetviewImage( fromDistance + incrementBy, incrementBy)
+  }
+  else {
+    var lookAheadPoint = maps.getPointOnLeg(route.routes[0].legs[leg], fromDistance + 10)
 
-      var brng = (θ * 180 / Math.PI + 360) % 360; // in degrees
-      console.log( `Getting street view at ${point[0]}, ${point[1]} looking ${brng}` )
-      brng += ( Math.random() * 100 - 50 ) // random turn up to 50deg
+    // calc bearing to look forward
+    var radLat1 = point[0] * Math.PI / 180
+    var radLong1 = point[1] * Math.PI / 180
+    var radLat2 = lookAheadPoint[0] * Math.PI / 180
+    var radLong2 = lookAheadPoint[1] * Math.PI / 180
+    const y = Math.sin(radLong2-radLong1) * Math.cos(radLat2);
+    const x = Math.cos(radLat1)*Math.sin(radLat2) -
+              Math.sin(radLat1)*Math.cos(radLat2)*Math.cos(radLong2-radLong1);
+    const θ = Math.atan2(y, x);
 
-      const path = maps.getPathsOverDistance( route.routes[0].legs[0], fromDistance - 20000, fromDistance + 20000, 750 )
-      
-      return {
-        distance: fromDistance, 
-        point: point,
-        image: await sv.image( {
-          lat: point[0],
-          lng: point[1],
-          size: [1024, 1024],
-          heading: brng
-        }),
-        map: await maps.getMapAtPoint( point[0], point[1], path )    
-      }
+    var brng = (θ * 180 / Math.PI + 360) % 360; // in degrees
+    console.log( `Getting street view at ${point[0]}, ${point[1]} looking ${brng}` )
+    brng += ( Math.random() * 100 - 50 ) // random turn up to 50deg
+
+    const path = maps.getPathsOverDistance( route.routes[0].legs[leg], distanceOnLeg - 20000, distanceOnLeg + 20000, 750 )
+    
+    return {
+      distance: fromDistance, 
+      point: point,
+      image: await sv.image( {
+        lat: point[0],
+        lng: point[1],
+        size: [1024, 1024],
+        heading: brng
+      }),
+      map: await maps.getMapAtPoint( point[0], point[1], path )    
     }
   }
+}
   
   async function saveNextStreetViewImage(atDist, starttime, stepNumber) {
     try {
