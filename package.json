@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node -r dotenv/config index.js",
+    "setroute": "node -r dotenv/config setroute.js",
     "tweet": "node -r dotenv/config forcetweet.js"
   },
   "author": "eddie cameron",
