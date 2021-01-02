@@ -103,6 +103,8 @@ exports.getPathsOverDistance = (leg, startDistance, endDistance, minPointDist) =
       }
     }
   }
+
+  console.log("Got path of length: " + path.length);
   return encodePath( path )
 }
 
