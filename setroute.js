@@ -6,11 +6,18 @@ exports.getDirs = async () => {
     try {
         const res = await client.directions({
             params: {
-            origin: {lat: 42.418435,lng: 130.643810 },
-            destination: { lat: 38.780430, lng: -9.498994 },
-            key: process.env.GOOGLE_API_KEY
-            //avoid: "highways"
-            // units: "metric",
+                origin: { lat: 12.3248856, lng: -71.724106 },
+                waypoints: [
+                    { lat: -40.573939, lng: -73.15923 }
+                    // {
+                    //     location: { lat: -40.573939, lng: -73.15923 },
+                    //     stopover: false
+                    // }
+                ],
+                destination: { lat: -53.64266, lng: -70.9532977 },
+                key: process.env.GOOGLE_API_KEY
+                //avoid: "highways"
+                // units: "metric",
         } })
         console.log( 'status: ' + res.status )
 

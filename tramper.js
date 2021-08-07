@@ -86,7 +86,8 @@ async function findNextStreetviewImage(fromDistance, incrementBy) {
     lat: point[0],
     lng: point[1]
   } )
-  if ( metadata.status != 'OK' ) {
+  if (metadata.status != 'OK') {
+    console.error(metadata)
     console.log( "No street view at " + fromDistance + ", going further" )
     return findNextStreetviewImage( fromDistance + incrementBy, incrementBy)
   }
